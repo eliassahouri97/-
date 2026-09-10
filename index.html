@@ -1,0 +1,5961 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>نظام محاسبة محل الشحن</title>
+
+<style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#172033;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --primary:#2563eb;
+  --danger:#dc2626;
+  --success:#16a34a;
+  --warn:#d97706;
+  --shadow:0 8px 25px rgba(0,0,0,.06);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,"Tahoma",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,input,select,textarea{
+  font:inherit;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* LOGIN */
+
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at top right,rgba(37,99,235,.12),transparent 35%),
+    var(--bg);
+}
+
+.login-box{
+  width:100%;
+  max-width:420px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:30px;
+  box-shadow:var(--shadow);
+}
+
+.login-brand{
+  text-align:center;
+  font-size:34px;
+  font-weight:900;
+  margin-bottom:5px;
+}
+
+.login-brand small{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  margin-top:5px;
+}
+
+.login-title{
+  text-align:center;
+  margin:25px 0 20px;
+}
+
+.login-title h1{
+  margin:0 0 8px;
+  font-size:24px;
+}
+
+.login-title p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.login-field{
+  margin-bottom:15px;
+}
+
+.login-field label{
+  display:block;
+  margin-bottom:7px;
+  font-weight:700;
+}
+
+.login-input{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  outline:none;
+  background:#fff;
+}
+
+.login-input:focus{
+  border-color:var(--primary);
+}
+
+.login-btn{
+  width:100%;
+  border:0;
+  padding:13px;
+  border-radius:10px;
+  background:var(--primary);
+  color:white;
+  cursor:pointer;
+  font-weight:800;
+  margin-top:5px;
+}
+
+.login-btn:hover{
+  opacity:.92;
+}
+
+.login-error{
+  background:#fef2f2;
+  color:#b91c1c;
+  border:1px solid #fecaca;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:15px;
+  font-size:14px;
+}
+
+.login-loading{
+  text-align:center;
+  color:var(--muted);
+  margin-top:12px;
+}
+
+/* APP */
+
+.app{
+  min-height:100vh;
+}
+
+.sidebar{
+  position:fixed;
+  right:0;
+  top:0;
+  bottom:0;
+  width:245px;
+  background:#111827;
+  color:white;
+  padding:20px 15px;
+  z-index:20;
+  overflow-y:auto;
+}
+
+.brand{
+  font-size:27px;
+  font-weight:900;
+  padding:10px 10px 20px;
+}
+
+.brand small{
+  display:block;
+  color:#9ca3af;
+  font-size:12px;
+  margin-top:4px;
+}
+
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.nav button{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#d1d5db;
+  text-align:right;
+  padding:12px;
+  border-radius:9px;
+  cursor:pointer;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:#1f2937;
+  color:white;
+}
+
+.logout-btn{
+  margin-top:15px!important;
+  color:#fca5a5!important;
+}
+
+.main{
+  margin-right:245px;
+  padding:22px;
+}
+
+.top{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-bottom:22px;
+}
+
+.title{
+  flex:1;
+}
+
+.title h1{
+  margin:0 0 5px;
+  font-size:25px;
+}
+
+.title p{
+  margin:0;
+  color:var(--muted);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.stat .label{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.stat .value{
+  font-size:25px;
+  font-weight:900;
+  margin-top:8px;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.section{
+  margin-top:18px;
+}
+
+.card h2{
+  margin-top:0;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+
+.table th,
+.table td{
+  padding:12px 10px;
+  border-bottom:1px solid var(--line);
+  text-align:right;
+  vertical-align:middle;
+}
+
+.table th{
+  background:#f9fafb;
+}
+
+.pill{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.green{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.red{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.yellow{
+  background:#fef3c7;
+  color:#92400e;
+}
+
+.blue{
+  background:#dbeafe;
+  color:#1e40af;
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+.input,
+.select,
+.textarea{
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:10px 12px;
+  background:white;
+  outline:none;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus{
+  border-color:var(--primary);
+}
+
+.textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.btn{
+  border:1px solid var(--line);
+  background:white;
+  color:var(--text);
+  padding:9px 13px;
+  border-radius:9px;
+  cursor:pointer;
+}
+
+.btn:hover{
+  opacity:.9;
+}
+
+.btn.primary{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:white;
+}
+
+.btn.success{
+  background:var(--success);
+  border-color:var(--success);
+  color:white;
+}
+
+.btn.danger{
+  background:var(--danger);
+  border-color:var(--danger);
+  color:white;
+}
+
+.btn.warning{
+  background:var(--warn);
+  border-color:var(--warn);
+  color:white;
+}
+
+.btn.small{
+  padding:6px 9px;
+  font-size:12px;
+}
+
+.back{
+  display:none;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+
+.field label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:700;
+  font-size:14px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
+}
+
+.modal.open{
+  display:flex;
+}
+
+.modalbox{
+  width:100%;
+  max-width:720px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:white;
+  border-radius:16px;
+  padding:20px;
+}
+
+.modalhead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+
+.modalhead h2{
+  margin:0;
+}
+
+.close{
+  border:0;
+  background:#f3f4f6;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:22px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:25px;
+}
+
+.alert{
+  padding:10px;
+  border-radius:9px;
+  background:#fffbeb;
+  border:1px solid #fde68a;
+  margin-bottom:8px;
+}
+
+.money{
+  font-weight:800;
+}
+
+.action-buttons{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.person-search-wrap{
+  position:relative;
+}
+
+.person-results{
+  display:none;
+  position:absolute;
+  top:100%;
+  right:0;
+  left:0;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:9px;
+  box-shadow:var(--shadow);
+  z-index:50;
+  max-height:200px;
+  overflow-y:auto;
+}
+
+.person-result{
+  width:100%;
+  border:0;
+  background:white;
+  text-align:right;
+  padding:10px;
+  cursor:pointer;
+}
+
+.person-result:hover{
+  background:#f3f4f6;
+}
+
+.selected-person{
+  display:none;
+  margin-top:6px;
+  padding:7px 10px;
+  background:#dcfce7;
+  color:#166534;
+  border-radius:8px;
+  font-size:12px;
+}
+
+@media(max-width:1000px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:900px){
+  .sidebar{
+    transform:translateX(100%);
+    transition:.2s;
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
+  .main{
+    margin-right:0;
+  }
+
+  .back{
+    display:block;
+  }
+}
+
+@media(max-width:560px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .field.full{
+    grid-column:auto;
+  }
+
+  .main{
+    padding:12px;
+  }
+
+  .top{
+    gap:8px;
+  }
+
+  .title h1{
+    font-size:20px;
+  }
+
+  .modalbox{
+    padding:15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+
+    <div class="login-brand">
+      شحنـي
+      <small>نظام المحاسبة</small>
+    </div>
+
+    <div class="login-title">
+      <h1>تسجيل الدخول 🔐</h1>
+      <p>أدخل بيانات حسابك للدخول إلى النظام</p>
+    </div>
+
+    <div id="loginError" class="login-error hidden"></div>
+
+    <div class="login-field">
+      <label>البريد الإلكتروني</label>
+      <input
+        id="loginEmail"
+        class="login-input"
+        type="email"
+        autocomplete="username"
+        placeholder="example@email.com"
+      >
+    </div>
+
+    <div class="login-field">
+      <label>كلمة المرور</label>
+      <input
+        id="loginPassword"
+        class="login-input"
+        type="password"
+        autocomplete="current-password"
+        placeholder="كلمة المرور"
+      >
+    </div>
+
+    <button class="login-btn" onclick="login()">
+      دخول
+    </button>
+
+    <div id="loginLoading" class="login-loading hidden">
+      جاري تسجيل الدخول...
+    </div>
+
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen" class="hidden">
+
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+      شحنـي
+      <small>نظام المحاسبة</small>
+    </div>
+
+    <div class="nav" id="nav"></div>
+
+  </aside>
+
+  <main class="main">
+
+    <div class="top">
+
+      <button class="btn back" onclick="toggleSide()">
+        ☰
+      </button>
+
+      <div class="title">
+        <h1 id="pageTitle">لوحة التحكم</h1>
+        <p id="pageSub">نظرة سريعة على وضع المحل</p>
+      </div>
+
+      <button class="btn primary" onclick="openSale()">
+        + بيع بطاقة
+      </button>
+
+    </div>
+
+    <div id="content"></div>
+
+  </main>
+
+</div>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+  <div class="modalbox">
+
+    <div class="modalhead">
+      <h2 id="modalTitle"></h2>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+
+    <div id="modalBody"></div>
+
+  </div>
+
+</div>
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+  'https://cxinyskesqniqpvmkjer.supabase.co';
+
+const SUPABASE_PUBLISHABLE_KEY =
+  'sb_publishable_VwLaFwYWAK1g2GMDqxeTMg_IWukVbTh';
+
+const SUPABASE_TABLE = 'shop_data';
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+/* =========================================================
+   DATA
+========================================================= */
+
+const KEY = 'charge_shop_v3';
+
+const initial = {
+  companies:['زين','أورنج','أمنية'],
+  cardTypes:[],
+  people:[],
+  sales:[],
+  transfers:[],
+  cashDebts:[],
+  cardDebts:[],
+  payments:[],
+  expenses:[],
+  cashMoves:[],
+  transferTemplates:[],
+  openingCash:0
+};
+
+let db = structuredClone(initial);
+
+let page = 'dashboard';
+
+let currentUser = null;
+
+let saveQueue = Promise.resolve();
+
+/* =========================================================
+   NORMALIZE DATA
+========================================================= */
+
+function normalizeDb(data){
+
+  data = data || {};
+
+  return {
+
+    companies:
+      Array.isArray(data.companies)
+      ? data.companies
+      : ['زين','أورنج','أمنية'],
+
+    cardTypes:
+      Array.isArray(data.cardTypes)
+      ? data.cardTypes
+      : [],
+
+    people:
+      Array.isArray(data.people)
+      ? data.people
+      : [],
+
+    sales:
+      Array.isArray(data.sales)
+      ? data.sales
+      : [],
+
+    transfers:
+      Array.isArray(data.transfers)
+      ? data.transfers
+      : [],
+
+    cashDebts:
+      Array.isArray(data.cashDebts)
+      ? data.cashDebts
+      : [],
+
+    cardDebts:
+      Array.isArray(data.cardDebts)
+      ? data.cardDebts
+      : [],
+
+    payments:
+      Array.isArray(data.payments)
+      ? data.payments
+      : [],
+
+    expenses:
+      Array.isArray(data.expenses)
+      ? data.expenses
+      : [],
+
+    cashMoves:
+      Array.isArray(data.cashMoves)
+      ? data.cashMoves
+      : [],
+
+    transferTemplates:
+      Array.isArray(data.transferTemplates)
+      ? data.transferTemplates
+      : [],
+
+    openingCash:
+      Number(data.openingCash || 0)
+
+  };
+}
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function login(){
+
+  const email =
+    document.getElementById('loginEmail').value.trim();
+
+  const password =
+    document.getElementById('loginPassword').value;
+
+  const errorBox =
+    document.getElementById('loginError');
+
+  const loading =
+    document.getElementById('loginLoading');
+
+  errorBox.classList.add('hidden');
+
+  if(!email || !password){
+
+    errorBox.textContent =
+      'أدخل البريد الإلكتروني وكلمة المرور.';
+
+    errorBox.classList.remove('hidden');
+
+    return;
+  }
+
+  loading.classList.remove('hidden');
+
+  const {data,error} =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  loading.classList.add('hidden');
+
+  if(error){
+
+    errorBox.textContent =
+      'بيانات الدخول غير صحيحة أو حدث خطأ في تسجيل الدخول.';
+
+    errorBox.classList.remove('hidden');
+
+    console.error(error);
+
+    return;
+  }
+
+  currentUser = data.user;
+
+  await startApp();
+
+}
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout(){
+
+  const ok =
+    confirm('هل تريد تسجيل الخروج؟');
+
+  if(!ok) return;
+
+  await supabaseClient.auth.signOut();
+
+  currentUser = null;
+
+  document
+    .getElementById('appScreen')
+    .classList.add('hidden');
+
+  document
+    .getElementById('loginScreen')
+    .classList.remove('hidden');
+
+  document.getElementById('loginPassword').value = '';
+
+}
+
+/* =========================================================
+   LOAD DATABASE
+========================================================= */
+
+/* =========================================================
+   LOAD DATABASE
+========================================================= */
+async function loadFromSupabase(){
+
+  if(!currentUser){
+    throw new Error('لا يوجد مستخدم مسجل الدخول');
+  }
+
+  const { data, error } = await supabaseClient
+    .from(SUPABASE_TABLE)
+    .select('id,data')
+    .eq('id', 1)
+    .single();
+
+  if(error){
+    console.error('Supabase LOAD ERROR:', error);
+    throw error;
+  }
+
+  if(!data){
+    throw new Error('لم يتم العثور على بيانات النظام');
+  }
+
+  db = normalizeDb(data.data);
+
+  // تحديث النسخة المحلية
+  localStorage.setItem(KEY, JSON.stringify(db));
+
+  console.log('تم تحميل البيانات من Supabase:', db);
+}
+/* =========================================================
+   SAVE
+========================================================= */
+
+async function save(){
+
+  localStorage.setItem(KEY, JSON.stringify(db));
+
+  const { error } = await supabaseClient
+    .from(SUPABASE_TABLE)
+    .update({
+      data: db,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', 1);
+
+  if(error){
+    console.error('Supabase SAVE ERROR:', error);
+    throw error;
+  }
+
+  console.log('تم حفظ البيانات في Supabase');
+}/* =========================================================
+   START APP
+========================================================= */
+
+async function startApp(){
+
+  try{
+
+    document
+      .getElementById('loginScreen')
+      .classList.add('hidden');
+
+    document
+      .getElementById('appScreen')
+      .classList.remove('hidden');
+
+    await loadFromSupabase();
+
+    nav();
+
+    render();
+
+  }catch(error){
+
+    console.error(error);
+
+    document
+      .getElementById('appScreen')
+      .classList.add('hidden');
+
+    document
+      .getElementById('loginScreen')
+      .classList.remove('hidden');
+
+    const errorBox =
+      document.getElementById('loginError');
+
+    errorBox.textContent =
+      'تم تسجيل الدخول، لكن تعذر تحميل بيانات النظام من قاعدة البيانات.';
+
+    errorBox.classList.remove('hidden');
+
+  }
+
+}
+
+/* =========================================================
+   SESSION CHECK
+========================================================= */
+
+async function checkSession(){
+
+  const {data,error} =
+    await supabaseClient.auth.getSession();
+
+  if(error){
+
+    console.error(error);
+
+    return;
+
+  }
+
+  if(data.session){
+
+    currentUser = data.session.user;
+
+    await startApp();
+
+  }else{
+
+    document
+      .getElementById('loginScreen')
+      .classList.remove('hidden');
+
+    document
+      .getElementById('appScreen')
+      .classList.add('hidden');
+
+  }
+
+}
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function transferTemplateKey(company,type){
+
+  return String(company??'').trim() +
+    '|' +
+    String(type??'').trim();
+
+}
+
+function getTransferTemplate(company,type){
+
+  if(!db.transferTemplates)
+    db.transferTemplates=[];
+
+  const key =
+    transferTemplateKey(company,type);
+
+  return db.transferTemplates.find(
+    x=>x.key===key
+  ) || null;
+
+}
+
+function rememberTransferTemplate(
+  company,
+  type,
+  price,
+  cost,
+  payment,
+  note
+){
+
+  if(!db.transferTemplates)
+    db.transferTemplates=[];
+
+  company =
+    String(company??'').trim();
+
+  type =
+    String(type??'').trim();
+
+  if(!company || !type)
+    return;
+
+  const key =
+    transferTemplateKey(company,type);
+
+  let t =
+    db.transferTemplates.find(
+      x=>x.key===key
+    );
+
+  if(!t){
+
+    t={
+      id:crypto.randomUUID(),
+      key,
+      company,
+      type
+    };
+
+    db.transferTemplates.push(t);
+
+  }
+
+  t.price=Number(price)||0;
+  t.cost=Number(cost)||0;
+  t.payment=payment||'نقدًا';
+  t.note=note||'';
+
+}
+
+function applyTransferTemplate(
+  companyId,
+  typeId,
+  priceId,
+  costId,
+  payId,
+  noteId
+){
+
+  const company =
+    document.getElementById(companyId)?.value || '';
+
+  const type =
+    document.getElementById(typeId)?.value.trim() || '';
+
+  if(!company || !type)
+    return;
+
+  const t =
+    getTransferTemplate(company,type);
+
+  if(!t)
+    return;
+
+  const price =
+    document.getElementById(priceId);
+
+  const cost =
+    document.getElementById(costId);
+
+  const pay =
+    document.getElementById(payId);
+
+  const note =
+    document.getElementById(noteId);
+
+  if(price)
+    price.value=t.price ?? '';
+
+  if(cost)
+    cost.value=t.cost ?? '';
+
+  if(pay && t.payment)
+    pay.value=t.payment;
+
+  if(note)
+    note.value=t.note ?? '';
+
+}
+
+function money(n){
+
+  return Number(n||0).toFixed(2)+' د.أ';
+
+}
+
+function esc(s){
+
+  return String(s??'')
+    .replace(
+      /[&<>'"]/g,
+      c=>({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        "'":'&#39;',
+        '"':'&quot;'
+      }[c]||'')
+    );
+
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+const pages={
+
+  dashboard:'لوحة التحكم',
+  sales:'المبيعات',
+  transfers:'التحويلات / الشحن',
+  transferReport:'تقرير البطاقات بالتحويل',
+  inventory:'المخزون',
+  people:'الأشخاص والديون',
+  expenses:'المصاريف',
+  cash:'الكاش',
+  reports:'التقارير',
+  types:'أنواع البطاقات',
+  backup:'إدارة البيانات والحذف'
+
+};
+
+function nav(){
+
+  document.getElementById('nav').innerHTML=
+
+    Object.entries(pages)
+
+    .map(([k,v])=>
+
+      `<button class="${page===k?'active':''}"
+        onclick="go('${k}')">${v}</button>`
+
+    ).join('')
+
+    +
+
+    `<button class="nav button logout-btn"
+      onclick="logout()">🚪 تسجيل الخروج</button>`;
+
+}
+
+function go(p){
+
+  page=p;
+
+  nav();
+
+  render();
+
+  if(innerWidth<901)
+    toggleSide(false);
+
+}
+
+function toggleSide(force){
+
+  let s =
+    document.getElementById('sidebar');
+
+  if(force===false)
+    s.classList.remove('open');
+
+  else
+    s.classList.toggle('open');
+
+}
+
+function render(){
+
+  document.getElementById('pageTitle').textContent =
+    pages[page];
+
+  document.getElementById('pageSub').textContent =
+    page==='dashboard'
+      ? 'نظرة سريعة على وضع المحل'
+      : 'نظام إدارة المحل';
+
+  ({
+    dashboard:dashboard,
+    sales:sales,
+    transfers:transfers,
+    transferReport:transferReport,
+    inventory:inventory,
+    people:people,
+    expenses:expenses,
+    cash:cash,
+    reports:reports,
+    types:types,
+    backup:backup
+  })[page]();
+
+}
+
+function today(){
+
+  return new Date()
+    .toISOString()
+    .slice(0,10);
+
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function totals(){
+
+  let t=today();
+
+  let ss =
+    db.sales.filter(
+      x=>
+        x.status!=='ملغاة' &&
+        x.date.slice(0,10)===t
+    );
+
+  let tr =
+    db.transfers.filter(
+      x=>
+        x.status!=='ملغاة' &&
+        x.date.slice(0,10)===t
+    );
+
+  let sales =
+    ss.reduce((a,x)=>a+x.price,0) +
+    tr.reduce((a,x)=>a+x.price,0);
+
+  let cashIn =
+    ss
+      .filter(x=>x.payment==='نقدًا')
+      .reduce((a,x)=>a+x.price,0)
+
+    +
+
+    tr
+      .filter(x=>x.payment==='نقدًا')
+      .reduce((a,x)=>a+x.price,0)
+
+    +
+
+    (db.payments||[])
+      .filter(x=>x.date.slice(0,10)===t)
+      .reduce((a,x)=>a+x.amount,0);
+
+  let profit =
+    ss.reduce(
+      (a,x)=>a+(x.price-x.cost),
+      0
+    )
+
+    +
+
+    tr.reduce(
+      (a,x)=>a+(x.price-x.cost),
+      0
+    );
+
+  let exp =
+    db.expenses
+      .filter(x=>x.date.slice(0,10)===t)
+      .reduce((a,x)=>a+x.amount,0);
+
+  return {
+    sales,
+    cashIn,
+    profit,
+    exp,
+    debt:db.people.reduce(
+      (a,x)=>a+x.debt,
+      0
+    )
+  };
+
+}
+
+function dashboard(){
+
+  let t=totals();
+
+  let low =
+    db.cardTypes.filter(
+      x=>x.stock<=x.alert
+    );
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="grid">
+
+      <div class="card stat">
+        <div class="label">مبيعات اليوم</div>
+        <div class="value">${money(t.sales)}</div>
+        <div class="sub">بطاقات + تحويلات</div>
+      </div>
+
+      <div class="card stat">
+        <div class="label">المقبوض نقدًا اليوم</div>
+        <div class="value">${money(t.cashIn)}</div>
+      </div>
+
+      <div class="card stat">
+        <div class="label">إجمالي الديون للعملاء</div>
+        <div class="value">${money(t.debt)}</div>
+      </div>
+
+      <div class="card stat">
+        <div class="label">ربح اليوم</div>
+        <div class="value">${money(t.profit)}</div>
+      </div>
+
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>تنبيهات المخزون</h2>
+
+        ${
+          low.length
+
+          ?
+
+          low.map(x=>
+            `<div class="alert">
+              ⚠️ ${esc(x.name)}:
+              المتوفر <b>${x.stock}</b>
+              — حد التنبيه ${x.alert}
+            </div>`
+          ).join('')
+
+          :
+
+          '<div class="empty">لا توجد بطاقات تحت حد التنبيه.</div>'
+        }
+
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>آخر العمليات</h2>
+        ${recentRows(8)}
+      </div>
+    </div>
+
+  `;
+
+}
+
+/* =========================================================
+   RECENT
+========================================================= */
+
+function recentRows(n){
+
+  let arr=[
+
+    ...db.sales.map(
+      x=>({...x,kind:'بيع بطاقة'})
+    ),
+
+    ...db.transfers.map(
+      x=>({...x,kind:'تحويل'})
+    ),
+
+    ...db.payments.map(
+      x=>({...x,kind:'دفع دين'})
+    ),
+
+    ...db.expenses.map(
+      x=>({...x,kind:'مصروف'})
+    ),
+
+    ...(db.cashDebts||[]).map(
+      x=>({...x,kind:'دين نقدي',amount:x.amount})
+    ),
+
+    ...(db.cardDebts||[]).map(
+      x=>({...x,kind:'دين بطاقات',amount:x.amount})
+    ),
+
+    ...(db.cashMoves||[]).map(
+      x=>({...x,kind:'حركة كاش',amount:x.amount})
+    )
+
+  ]
+
+  .sort(
+    (a,b)=>new Date(b.date)-new Date(a.date)
+  )
+
+  .slice(0,n);
+
+  if(!arr.length)
+    return '<div class="empty">لا توجد عمليات بعد.</div>';
+
+  return `
+
+    <div class="table-wrap">
+
+      <table class="table">
+
+        <thead>
+          <tr>
+            <th>النوع</th>
+            <th>التفاصيل</th>
+            <th>المبلغ</th>
+            <th>التاريخ</th>
+            <th>الحالة</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          ${arr.map(x=>`
+
+            <tr>
+
+              <td>${esc(x.kind)}</td>
+
+              <td>
+                ${esc(
+                  x.cardName ||
+                  x.name ||
+                  x.description ||
+                  x.note ||
+                  x.type ||
+                  ''
+                )}
+              </td>
+
+              <td>
+                ${money(x.price??x.amount)}
+              </td>
+
+              <td>${esc(x.date)}</td>
+
+              <td>
+                <span class="pill ${
+                  x.status==='ملغاة'
+                  ? 'red'
+                  : 'green'
+                }">
+                  ${x.status||'مسجل'}
+                </span>
+              </td>
+
+            </tr>
+
+          `).join('')}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+/* =========================================================
+   SALES
+========================================================= */
+
+function sales(){
+
+  let q =
+    document.getElementById('q')?.value || '';
+
+  let arr =
+    db.sales.filter(
+      x=>
+        (
+          x.cardName+' '+
+          x.person+' '+
+          x.company
+        )
+        .toLowerCase()
+        .includes(q.toLowerCase())
+    );
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="toolbar">
+
+      <input
+        id="q"
+        class="input"
+        placeholder="بحث بالشخص أو البطاقة أو الشركة"
+        value="${esc(q)}"
+        oninput="sales()"
+      >
+
+      <button
+        class="btn primary"
+        onclick="openSale()">
+        + بيع بطاقة ورقية
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <div class="table-wrap">
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>الشركة</th>
+              <th>البطاقة</th>
+              <th>الشخص</th>
+              <th>السعر</th>
+              <th>الدفع</th>
+              <th>التاريخ</th>
+              <th>الحالة</th>
+              <th>الإجراء</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${
+              arr.length
+
+              ?
+
+              arr.map(x=>`
+
+                <tr>
+
+                  <td>${esc(x.company)}</td>
+                  <td>${esc(x.cardName)}</td>
+                  <td>${esc(x.person||'—')}</td>
+                  <td>${money(x.price)}</td>
+                  <td>${esc(x.payment)}</td>
+                  <td>${esc(x.date)}</td>
+
+                  <td>
+                    <span class="pill green">
+                      ${esc(x.status||'مسجل')}
+                    </span>
+                  </td>
+
+                  <td>
+                    <button
+                      class="btn small danger"
+                      onclick="deleteSale('${x.id}')">
+                      🗑️ حذف
+                    </button>
+                  </td>
+
+                </tr>
+
+              `).join('')
+
+              :
+
+              '<tr><td colspan="8" class="empty">لا توجد مبيعات.</td></tr>'
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function deleteSale(id){
+
+  const x =
+    db.sales.find(x=>x.id===id);
+
+  if(!x)return;
+
+  if(!confirm(
+    `هل تريد حذف هذه الحركة?\n\n`+
+    `البطاقة: ${x.cardName}\n`+
+    `المبلغ: ${money(x.price)}\n`+
+    `الدفع: ${x.payment}\n\n`+
+    `سيتم إرجاع البطاقة للمخزون `+
+    `وعكس الدين إذا كانت العملية بالدين.`
+  ))return;
+
+  const card =
+    db.cardTypes.find(
+      t=>t.id===x.typeId
+    );
+
+  if(card)
+    card.stock++;
+
+  if(
+    x.payment==='دين' &&
+    x.personId
+  ){
+
+    const p =
+      db.people.find(
+        p=>p.id===x.personId
+      );
+
+    if(p)
+      p.debt-=x.price;
+
+  }
+
+  db.sales =
+    db.sales.filter(
+      s=>s.id!==id
+    );
+
+  save();
+
+  sales();
+
+}
+
+/* =========================================================
+   TRANSFERS
+========================================================= */
+
+function transfers(){
+
+  let q =
+    document.getElementById('transferSearch')?.value || '';
+
+  let arr =
+    db.transfers.filter(
+      x=>
+        (
+          x.company+' '+
+          x.type+' '+
+          x.person
+        )
+        .toLowerCase()
+        .includes(q.toLowerCase())
+    );
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="toolbar">
+
+      <input
+        id="transferSearch"
+        class="input"
+        placeholder="بحث بالشخص أو الشركة أو نوع التحويل"
+        value="${esc(q)}"
+        oninput="transfers()"
+      >
+
+      <button
+        class="btn primary"
+        onclick="openTransfer()">
+        + تسجيل تحويل / شحن
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <div class="table-wrap">
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>الشركة</th>
+              <th>النوع/القيمة</th>
+              <th>الشخص</th>
+              <th>السعر</th>
+              <th>الدفع</th>
+              <th>التاريخ</th>
+              <th>الحالة</th>
+              <th>الإجراء</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${
+              arr.length
+
+              ?
+
+              arr.map(x=>`
+
+                <tr>
+
+                  <td>${esc(x.company)}</td>
+                  <td>${esc(x.type)}</td>
+                  <td>${esc(x.person||'—')}</td>
+                  <td>${money(x.price)}</td>
+                  <td>${esc(x.payment)}</td>
+                  <td>${esc(x.date)}</td>
+
+                  <td>
+                    <span class="pill green">
+                      ${esc(x.status||'مسجل')}
+                    </span>
+                  </td>
+
+                  <td>
+                    <button
+                      class="btn small danger"
+                      onclick="deleteTransfer('${x.id}')">
+                      🗑️ حذف
+                    </button>
+                  </td>
+
+                </tr>
+
+              `).join('')
+
+              :
+
+              '<tr><td colspan="8" class="empty">لا توجد تحويلات.</td></tr>'
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function deleteTransfer(id){
+
+  const x =
+    db.transfers.find(x=>x.id===id);
+
+  if(!x)return;
+
+  if(!confirm(
+    `هل تريد حذف عملية التحويل?\n\n`+
+    `النوع: ${x.type}\n`+
+    `المبلغ: ${money(x.price)}\n`+
+    `الدفع: ${x.payment}\n\n`+
+    `سيتم عكس تأثير الدين إن وجد.`
+  ))return;
+
+  if(
+    x.payment==='دين' &&
+    x.personId
+  ){
+
+    const p =
+      db.people.find(
+        p=>p.id===x.personId
+      );
+
+    if(p)
+      p.debt-=x.price;
+
+  }
+
+  db.transfers =
+    db.transfers.filter(
+      t=>t.id!==id
+    );
+
+  save();
+
+  transfers();
+
+}
+
+/* =========================================================
+   TRANSFER REPORT
+========================================================= */
+
+function transferReport(){
+
+  let q =
+    document.getElementById('trq')?.value || '';
+
+  let arr =
+    db.transfers.filter(
+      x=>
+        x.status!=='ملغاة' &&
+        (
+          x.company+' '+
+          x.type+' '+
+          x.person
+        )
+        .toLowerCase()
+        .includes(q.toLowerCase())
+    );
+
+  let total =
+    arr.reduce(
+      (a,x)=>a+x.price,
+      0
+    );
+
+  let cash =
+    arr
+      .filter(x=>x.payment==='نقدًا')
+      .reduce((a,x)=>a+x.price,0);
+
+  let debt =
+    arr
+      .filter(x=>x.payment==='دين')
+      .reduce((a,x)=>a+x.price,0);
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="grid">
+
+      <div class="card stat">
+        <div class="label">عدد التحويلات</div>
+        <div class="value">${arr.length}</div>
+      </div>
+
+      <div class="card stat">
+        <div class="label">إجمالي المبيعات بالتحويل</div>
+        <div class="value">${money(total)}</div>
+      </div>
+
+      <div class="card stat">
+        <div class="label">تحويلات نقدية</div>
+        <div class="value">${money(cash)}</div>
+      </div>
+
+      <div class="card stat">
+        <div class="label">تحويلات بالدين</div>
+        <div class="value">${money(debt)}</div>
+      </div>
+
+    </div>
+
+    <div class="toolbar" style="margin-top:18px">
+
+      <input
+        id="trq"
+        class="input"
+        placeholder="بحث بالشخص أو الشركة أو نوع التحويل"
+        value="${esc(q)}"
+        oninput="transferReport()"
+      >
+
+      <button
+        class="btn"
+        onclick="window.print()">
+        🖨️ طباعة التقرير
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <div class="table-wrap">
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>الشركة</th>
+              <th>النوع / القيمة</th>
+              <th>الشخص</th>
+              <th>السعر</th>
+              <th>الدفع</th>
+              <th>التاريخ</th>
+              <th>ملاحظات</th>
+              <th>الإجراء</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${
+              arr.length
+
+              ?
+
+              arr.map(x=>`
+
+                <tr>
+
+                  <td>${esc(x.company)}</td>
+                  <td>${esc(x.type)}</td>
+                  <td>${esc(x.person||'—')}</td>
+                  <td>${money(x.price)}</td>
+                  <td>${esc(x.payment)}</td>
+                  <td>${esc(x.date)}</td>
+                  <td>${esc(x.note||'')}</td>
+
+                  <td>
+                    <button
+                      class="btn small danger"
+                      onclick="deleteTransferFromReport('${x.id}')">
+                      🗑️ حذف
+                    </button>
+                  </td>
+
+                </tr>
+
+              `).join('')
+
+              :
+
+              '<tr><td colspan="8" class="empty">لا توجد عمليات تحويل.</td></tr>'
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function deleteTransferFromReport(id){
+
+  const x =
+    db.transfers.find(x=>x.id===id);
+
+  if(!x)return;
+
+  if(!confirm(
+    `حذف عملية التحويل?\n\n`+
+    `${x.type}\n`+
+    `المبلغ: ${money(x.price)}`
+  ))return;
+
+  if(
+    x.payment==='دين' &&
+    x.personId
+  ){
+
+    const p =
+      db.people.find(
+        p=>p.id===x.personId
+      );
+
+    if(p)
+      p.debt-=x.price;
+
+  }
+
+  db.transfers =
+    db.transfers.filter(
+      t=>t.id!==id
+    );
+
+  save();
+
+  transferReport();
+
+}
+
+/* =========================================================
+   INVENTORY
+========================================================= */
+
+function inventory(){
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="toolbar">
+
+      <button
+        class="btn primary"
+        onclick="openStock()">
+        + إدخال بضاعة
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <div class="table-wrap">
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>الشركة</th>
+              <th>البطاقة</th>
+              <th>القيمة</th>
+              <th>التكلفة</th>
+              <th>المتوفر</th>
+              <th>حد التنبيه</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${
+              db.cardTypes.length
+
+              ?
+
+              db.cardTypes.map(x=>`
+
+                <tr>
+
+                  <td>${esc(x.company)}</td>
+                  <td>${esc(x.name)}</td>
+                  <td>${money(x.value)}</td>
+                  <td>${money(x.cost)}</td>
+                  <td><b>${x.stock}</b></td>
+                  <td>${x.alert}</td>
+
+                  <td>
+                    <span class="pill ${
+                      x.stock<=x.alert
+                      ? 'yellow'
+                      : 'green'
+                    }">
+                      ${
+                        x.stock<=x.alert
+                        ? 'قريب من النفاد'
+                        : 'جيد'
+                      }
+                    </span>
+                  </td>
+
+                </tr>
+
+              `).join('')
+
+              :
+
+              '<tr><td colspan="7" class="empty">لا توجد بطاقات. قم بإضافة أنواع جديدة.</td></tr>'
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+/* =========================================================
+   PEOPLE
+========================================================= */
+
+function people(){
+
+  let q =
+    document.getElementById('peopleSearch')?.value || '';
+
+  let arr =
+    db.people.filter(
+      p=>
+        p.name
+        .toLowerCase()
+        .includes(q.toLowerCase())
+    );
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="toolbar">
+
+      <input
+        id="peopleSearch"
+        class="input"
+        placeholder="🔎 بحث باسم الشخص..."
+        value="${esc(q)}"
+        style="min-width:280px"
+      >
+
+      <button
+        class="btn primary"
+        onclick="openPerson()">
+        + شخص جديد
+      </button>
+
+    </div>
+
+    <div class="grid" id="peopleGrid">
+
+      ${
+        arr.map(p=>`
+
+          <div
+            class="card person-card"
+            data-person-name="${esc(p.name).toLowerCase()}"
+          >
+
+            <b style="font-size:17px">
+              ${esc(p.name)}
+            </b>
+
+            <div
+              style="
+                font-size:25px;
+                font-weight:800;
+                margin:12px 0;
+                color:${p.debt<0?'var(--success)':'inherit'}
+              "
+            >
+              ${money(p.debt)}
+            </div>
+
+            <div class="sub">
+              ${
+                p.debt<0
+                ? 'له على المحل (دائن)'
+                : 'عليه للمحل (مدين)'
+              }
+            </div>
+
+            <div
+              class="action-buttons"
+              style="margin-top:12px"
+            >
+
+              <button
+                class="btn"
+                onclick="personDetail('${p.id}')">
+                كشف الحساب
+              </button>
+
+              <button
+                class="btn"
+                onclick="editPerson('${p.id}')">
+                ✏️ تعديل
+              </button>
+
+              <button
+                class="btn success"
+                onclick="openPayment('${p.id}')">
+                تسديد
+              </button>
+
+              <button
+                class="btn danger"
+                onclick="deletePerson('${p.id}')">
+                🗑️ حذف
+              </button>
+
+            </div>
+
+          </div>
+
+        `).join('')
+
+        ||
+
+        '<div class="empty people-empty">لا يوجد أشخاص مطابقون للبحث.</div>'
+      }
+
+    </div>
+
+  `;
+
+  const search =
+    document.getElementById('peopleSearch');
+
+  if(search){
+
+    search.addEventListener(
+      'input',
+      function(){
+
+        const value =
+          this.value.toLowerCase().trim();
+
+        document
+          .querySelectorAll('.person-card')
+          .forEach(card=>{
+
+            const name =
+              card.dataset.personName||'';
+
+            card.style.display =
+              name.includes(value)
+              ? ''
+              : 'none';
+
+          });
+
+      }
+    );
+
+  }
+
+}
+
+/* =========================================================
+   EDIT PERSON
+========================================================= */
+
+function editPerson(id){
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  openModal(
+    'تعديل اسم الشخص',
+    `
+
+      <div class="field">
+
+        <label>اسم الشخص</label>
+
+        <input
+          id="editPersonName"
+          class="input"
+          value="${esc(p.name)}"
+          style="width:100%"
+        >
+
+      </div>
+
+      <div
+        class="field"
+        style="margin-top:12px"
+      >
+
+        <label>ملاحظات</label>
+
+        <textarea
+          id="editPersonNote"
+          class="textarea"
+          style="width:100%"
+        >${esc(p.note||'')}</textarea>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="savePersonEdit('${id}')">
+          حفظ التعديل
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function savePersonEdit(id){
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  let name =
+    document
+      .getElementById('editPersonName')
+      .value
+      .trim();
+
+  if(!name)
+    return alert('أدخل اسم الشخص');
+
+  p.name=name;
+
+  p.note =
+    document
+      .getElementById('editPersonNote')
+      .value;
+
+  db.sales.forEach(
+    x=>{
+      if(x.personId===id)
+        x.person=name;
+    }
+  );
+
+  db.transfers.forEach(
+    x=>{
+      if(x.personId===id)
+        x.person=name;
+    }
+  );
+
+  (db.payments||[]).forEach(
+    x=>{
+      if(x.personId===id)
+        x.person=name;
+    }
+  );
+
+  (db.cashDebts||[]).forEach(
+    x=>{
+      if(x.personId===id)
+        x.person=name;
+    }
+  );
+
+  (db.cardDebts||[]).forEach(
+    x=>{
+      if(x.personId===id)
+        x.person=name;
+    }
+  );
+
+  save();
+
+  closeModal();
+
+  people();
+
+}
+
+/* =========================================================
+   DELETE PERSON
+========================================================= */
+
+function deletePerson(id){
+
+  const p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  if(p.debt!==0){
+
+    alert(
+      `لا يمكن حذف الشخص "${p.name}" لأن رصيده ليس صفرًا.\n\n`+
+      `الرصيد الحالي: ${money(p.debt)}\n\n`+
+      `قم بتسديد الحساب أو حذف الحركات المرتبطة به أولًا.`
+    );
+
+    return;
+
+  }
+
+  const hasTransactions=
+
+    db.sales.some(
+      x=>x.personId===id
+    )
+
+    ||
+
+    db.transfers.some(
+      x=>x.personId===id
+    )
+
+    ||
+
+    (db.payments||[]).some(
+      x=>x.personId===id
+    )
+
+    ||
+
+    (db.cashDebts||[]).some(
+      x=>x.personId===id
+    )
+
+    ||
+
+    (db.cardDebts||[]).some(
+      x=>x.personId===id
+    );
+
+  if(hasTransactions){
+
+    alert(
+      `لا يمكن حذف "${p.name}" لأن لديه حركات مسجلة في كشف الحساب.\n\n`+
+      `احذف الحركات المرتبطة به أولًا.`
+    );
+
+    return;
+
+  }
+
+  if(!confirm(
+    `هل أنت متأكد من حذف الشخص "${p.name}"؟`
+  ))return;
+
+  db.people =
+    db.people.filter(
+      x=>x.id!==id
+    );
+
+  save();
+
+  people();
+
+}
+
+/* =========================================================
+   PERSON DETAIL
+========================================================= */
+
+function personDetail(id){
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  let tx=[
+
+    ...db.sales
+      .filter(
+        x=>
+          x.personId===id &&
+          x.payment==='دين'
+      )
+      .map(
+        x=>({
+          id:x.id,
+          date:x.date,
+          label:'بطاقة ورقية — '+x.cardName,
+          amount:x.price,
+          plus:true,
+          kind:'sale'
+        })
+      ),
+
+    ...db.transfers
+      .filter(
+        x=>
+          x.personId===id &&
+          x.payment==='دين'
+      )
+      .map(
+        x=>({
+          id:x.id,
+          date:x.date,
+          label:'تحويل — '+x.type,
+          amount:x.price,
+          plus:true,
+          kind:'transfer'
+        })
+      ),
+
+    ...(db.cashDebts||[])
+      .filter(x=>x.personId===id)
+      .map(
+        x=>({
+          id:x.id,
+          date:x.date,
+          label:
+            'دين نقدي عليه'+
+            (x.note?' — '+x.note:''),
+          amount:x.amount,
+          plus:true,
+          kind:'cashDebt'
+        })
+      ),
+
+    ...(db.cardDebts||[])
+      .filter(x=>x.personId===id)
+      .map(
+        x=>({
+          id:x.id,
+          date:x.date,
+          label:
+            'دين بطاقات (له على المحل)'+
+            (x.note?' — '+x.note:''),
+          amount:x.amount,
+          plus:false,
+          kind:'cardDebt'
+        })
+      ),
+
+    ...(db.payments||[])
+      .filter(x=>x.personId===id)
+      .map(
+        x=>({
+          id:x.id,
+          date:x.date,
+          label:
+            'دفعة تسديد'+
+            (x.note?' — '+x.note:''),
+          amount:x.amount,
+          plus:false,
+          kind:'payment'
+        })
+      )
+
+  ]
+  .sort(
+    (a,b)=>new Date(b.date)-new Date(a.date)
+  );
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="toolbar">
+
+      <button
+        class="btn"
+        onclick="people()">
+        ← رجوع
+      </button>
+
+      <button
+        class="btn"
+        onclick="editPerson('${id}')">
+        ✏️ تعديل الاسم
+      </button>
+
+      <button
+        class="btn success"
+        onclick="openPayment('${id}')">
+        + تسديد
+      </button>
+
+      <button
+        class="btn primary"
+        onclick="openCashDebt('${id}')">
+        + دين نقدي (عليه)
+      </button>
+
+      <button
+        class="btn warning"
+        onclick="openCardDebt('${id}')">
+        + له دين بطاقات (دائن)
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <h2>${esc(p.name)}</h2>
+
+      <div class="stat">
+
+        <div class="label">
+          الرصيد الحالي
+        </div>
+
+        <div
+          class="value"
+          style="color:${p.debt<0?'var(--success)':'inherit'}"
+        >
+          ${money(p.debt)}
+        </div>
+
+        <div class="sub">
+          ${
+            p.debt<0
+            ? 'المحل مدين له'
+            : 'العميل مدين للمحل'
+          }
+        </div>
+
+      </div>
+
+      <div class="section">
+
+        <div class="table-wrap">
+
+          <table class="table">
+
+            <thead>
+              <tr>
+                <th>التاريخ</th>
+                <th>الحركة</th>
+                <th>مدين (عليه)</th>
+                <th>دائن (له)</th>
+                <th>الإجراء</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${
+                tx.map(x=>`
+
+                  <tr>
+
+                    <td>${esc(x.date)}</td>
+
+                    <td>${esc(x.label)}</td>
+
+                    <td>
+                      ${
+                        x.plus
+                        ? money(x.amount)
+                        : '—'
+                      }
+                    </td>
+
+                    <td>
+                      ${
+                        x.plus
+                        ? '—'
+                        : money(x.amount)
+                      }
+                    </td>
+
+                    <td>
+
+                      ${
+                        x.kind==='sale'
+
+                        ?
+
+                        `<button
+                          class="btn small danger"
+                          onclick="deletePersonSale('${x.id}','${id}')">
+                          🗑️ حذف
+                        </button>`
+
+                        :
+
+                        x.kind==='transfer'
+
+                        ?
+
+                        `<button
+                          class="btn small danger"
+                          onclick="deletePersonTransfer('${x.id}','${id}')">
+                          🗑️ حذف
+                        </button>`
+
+                        :
+
+                        x.kind==='cashDebt'
+
+                        ?
+
+                        `<button
+                          class="btn small danger"
+                          onclick="deleteCashDebt('${x.id}','${id}')">
+                          🗑️ حذف
+                        </button>`
+
+                        :
+
+                        x.kind==='cardDebt'
+
+                        ?
+
+                        `<button
+                          class="btn small danger"
+                          onclick="deleteCardDebt('${x.id}','${id}')">
+                          🗑️ حذف
+                        </button>`
+
+                        :
+
+                        x.kind==='payment'
+
+                        ?
+
+                        `<button
+                          class="btn small danger"
+                          onclick="deletePayment('${x.id}','${id}')">
+                          🗑️ حذف
+                        </button>`
+
+                        :
+
+                        ''
+
+                      }
+
+                    </td>
+
+                  </tr>
+
+                `).join('')
+
+                ||
+
+                '<tr><td colspan="5" class="empty">لا توجد حركات.</td></tr>'
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function deletePersonSale(id,personId){
+
+  const x =
+    db.sales.find(
+      x=>x.id===id
+    );
+
+  if(!x)return;
+
+  if(!confirm(
+    `حذف بيع البطاقة?\n\n`+
+    `${x.cardName}\n`+
+    `المبلغ: ${money(x.price)}\n\n`+
+    `سيتم إرجاع البطاقة للمخزون وعكس الدين.`
+  ))return;
+
+  const card =
+    db.cardTypes.find(
+      t=>t.id===x.typeId
+    );
+
+  if(card)
+    card.stock++;
+
+  const p =
+    db.people.find(
+      p=>p.id===personId
+    );
+
+  if(p)
+    p.debt-=x.price;
+
+  db.sales =
+    db.sales.filter(
+      x=>x.id!==id
+    );
+
+  save();
+
+  personDetail(personId);
+
+}
+
+function deletePersonTransfer(id,personId){
+
+  const x =
+    db.transfers.find(
+      x=>x.id===id
+    );
+
+  if(!x)return;
+
+  if(!confirm(
+    `حذف عملية التحويل?\n\n`+
+    `${x.type}\n`+
+    `المبلغ: ${money(x.price)}\n\n`+
+    `سيتم عكس الدين.`
+  ))return;
+
+  const p =
+    db.people.find(
+      p=>p.id===personId
+    );
+
+  if(p)
+    p.debt-=x.price;
+
+  db.transfers =
+    db.transfers.filter(
+      x=>x.id!==id
+    );
+
+  save();
+
+  personDetail(personId);
+
+}
+
+function deletePayment(id,personId){
+
+  const x =
+    (db.payments||[])
+    .find(
+      x=>x.id===id
+    );
+
+  if(!x)return;
+
+  if(!confirm(
+    `حذف دفعة التسديد?\n\n`+
+    `المبلغ: ${money(x.amount)}\n\n`+
+    `سيتم إعادة المبلغ إلى رصيد الشخص.`
+  ))return;
+
+  const p =
+    db.people.find(
+      x=>x.id===personId
+    );
+
+  if(p)
+    p.debt+=x.amount;
+
+  db.payments =
+    db.payments.filter(
+      x=>x.id!==id
+    );
+
+  save();
+
+  personDetail(personId);
+
+}
+
+function deleteCashDebt(id,personId){
+
+  const x =
+    (db.cashDebts||[])
+    .find(
+      x=>x.id===id
+    );
+
+  if(!x)return;
+
+  if(!confirm(
+    `حذف الدين النقدي?\n\n`+
+    `المبلغ: ${money(x.amount)}\n\n`+
+    `سيتم إنقاص الدين من حساب الشخص.`
+  ))return;
+
+  const p =
+    db.people.find(
+      p=>p.id===personId
+    );
+
+  if(p)
+    p.debt-=x.amount;
+
+  db.cashDebts =
+    db.cashDebts.filter(
+      x=>x.id!==id
+    );
+
+  save();
+
+  personDetail(personId);
+
+}
+
+function deleteCardDebt(id,personId){
+
+  const x =
+    (db.cardDebts||[])
+    .find(
+      x=>x.id===id
+    );
+
+  if(!x)return;
+
+  if(!confirm(
+    `حذف دين البطاقات?\n\n`+
+    `المبلغ: ${money(x.amount)}\n\n`+
+    `سيتم عكس الدائن في حساب الشخص.`
+  ))return;
+
+  const p =
+    db.people.find(
+      p=>p.id===personId
+    );
+
+  if(p)
+    p.debt+=x.amount;
+
+  db.cardDebts =
+    db.cardDebts.filter(
+      x=>x.id!==id
+    );
+
+  save();
+
+  personDetail(personId);
+
+}
+
+/* =========================================================
+   EXPENSES
+========================================================= */
+
+function expenses(){
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="toolbar">
+
+      <button
+        class="btn primary"
+        onclick="openExpense()">
+        + مصروف
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <div class="table-wrap">
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>الوصف</th>
+              <th>المبلغ</th>
+              <th>التاريخ</th>
+              <th>ملاحظات</th>
+              <th>الإجراء</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${
+              db.expenses.map(x=>`
+
+                <tr>
+
+                  <td>${esc(x.description)}</td>
+                  <td>${money(x.amount)}</td>
+                  <td>${esc(x.date)}</td>
+                  <td>${esc(x.note||'')}</td>
+
+                  <td>
+
+                    <button
+                      class="btn small danger"
+                      onclick="deleteExpense('${x.id}')">
+                      🗑️ حذف
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              `).join('')
+
+              ||
+
+              '<tr><td colspan="5" class="empty">لا توجد مصاريف.</td></tr>'
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function deleteExpense(id){
+
+  const x =
+    db.expenses.find(
+      x=>x.id===id
+    );
+
+  if(!x)return;
+
+  if(!confirm(
+    `هل تريد حذف هذا المصروف?\n\n`+
+    `${x.description}\n`+
+    `المبلغ: ${money(x.amount)}\n\n`+
+    `سيعود تأثيره إلى الكاش المتوقع.`
+  ))return;
+
+  db.expenses =
+    db.expenses.filter(
+      e=>e.id!==id
+    );
+
+  save();
+
+  expenses();
+
+}
+
+/* =========================================================
+   CASH
+========================================================= */
+
+function cash(){
+
+  let expected=
+
+    db.openingCash
+
+    +
+
+    db.sales
+      .filter(
+        x=>
+          x.status!=='ملغاة' &&
+          x.payment==='نقدًا'
+      )
+      .reduce(
+        (a,x)=>a+x.price,
+        0
+      )
+
+    +
+
+    db.transfers
+      .filter(
+        x=>
+          x.status!=='ملغاة' &&
+          x.payment==='نقدًا'
+      )
+      .reduce(
+        (a,x)=>a+x.price,
+        0
+      )
+
+    +
+
+    (db.payments||[])
+      .reduce(
+        (a,x)=>a+x.amount,
+        0
+      )
+
+    +
+
+    (db.cashMoves||[])
+      .filter(x=>x.type==='in')
+      .reduce(
+        (a,x)=>a+x.amount,
+        0
+      )
+
+    -
+
+    db.expenses
+      .reduce(
+        (a,x)=>a+x.amount,
+        0
+      )
+
+    -
+
+    (db.cashMoves||[])
+      .filter(x=>x.type==='out')
+      .reduce(
+        (a,x)=>a+x.amount,
+        0
+      );
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="grid">
+
+      <div class="card stat">
+
+        <div class="label">
+          رصيد افتتاحي
+        </div>
+
+        <div class="value">
+          ${money(db.openingCash)}
+        </div>
+
+      </div>
+
+      <div class="card stat">
+
+        <div class="label">
+          الكاش المتوقع
+        </div>
+
+        <div class="value">
+          ${money(expected)}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <div class="toolbar">
+
+        <button
+          class="btn primary"
+          onclick="openCashMove()">
+          + حركة كاش
+        </button>
+
+        <button
+          class="btn"
+          onclick="openOpening()">
+          تعديل الرصيد الافتتاحي
+        </button>
+
+      </div>
+
+      <div class="card">
+
+        <h2>حركات الكاش</h2>
+
+        <div class="table-wrap">
+
+          <table class="table">
+
+            <thead>
+              <tr>
+                <th>النوع</th>
+                <th>المبلغ</th>
+                <th>التاريخ</th>
+                <th>ملاحظات</th>
+                <th>الإجراء</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${
+                (db.cashMoves||[]).map(x=>`
+
+                  <tr>
+
+                    <td>
+                      ${
+                        x.type==='in'
+                        ? 'إضافة'
+                        : 'سحب'
+                      }
+                    </td>
+
+                    <td>${money(x.amount)}</td>
+
+                    <td>${esc(x.date)}</td>
+
+                    <td>${esc(x.note||'')}</td>
+
+                    <td>
+
+                      <button
+                        class="btn small danger"
+                        onclick="deleteCashMove('${x.id}')">
+                        🗑️ حذف
+                      </button>
+
+                    </td>
+
+                  </tr>
+
+                `).join('')
+
+                ||
+
+                '<tr><td colspan="5" class="empty">لا توجد حركات يدوية.</td></tr>'
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function deleteCashMove(id){
+
+  const x =
+    (db.cashMoves||[])
+    .find(
+      x=>x.id===id
+    );
+
+  if(!x)return;
+
+  if(!confirm(
+    `هل تريد حذف حركة الكاش?\n\n`+
+    `النوع: ${x.type==='in'?'إضافة':'سحب'}\n`+
+    `المبلغ: ${money(x.amount)}`
+  ))return;
+
+  db.cashMoves =
+    db.cashMoves.filter(
+      x=>x.id!==id
+    );
+
+  save();
+
+  cash();
+
+}
+
+/* =========================================================
+   REPORTS
+========================================================= */
+
+function reports(){
+
+  let s =
+    db.sales.filter(
+      x=>x.status!=='ملغاة'
+    );
+
+  let tr =
+    db.transfers.filter(
+      x=>x.status!=='ملغاة'
+    );
+
+  let total =
+    s.reduce(
+      (a,x)=>a+x.price,
+      0
+    )
+
+    +
+
+    tr.reduce(
+      (a,x)=>a+x.price,
+      0
+    );
+
+  let cashSales =
+    s
+      .filter(x=>x.payment==='نقدًا')
+      .reduce(
+        (a,x)=>a+x.price,
+        0
+      );
+
+  let cashTransfers =
+    tr
+      .filter(x=>x.payment==='نقدًا')
+      .reduce(
+        (a,x)=>a+x.price,
+        0
+      );
+
+  let payments =
+    (db.payments||[])
+      .reduce(
+        (a,x)=>a+x.amount,
+        0
+      );
+
+  let exp =
+    db.expenses
+      .reduce(
+        (a,x)=>a+x.amount,
+        0
+      );
+
+  let profit =
+
+    s.reduce(
+      (a,x)=>a+x.price-x.cost,
+      0
+    )
+
+    +
+
+    tr.reduce(
+      (a,x)=>a+x.price-x.cost,
+      0
+    );
+
+  let netProfit =
+    profit-exp;
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="toolbar">
+
+      <button
+        class="btn primary"
+        onclick="window.print()">
+        🖨️ طباعة التقارير
+      </button>
+
+    </div>
+
+    <div class="grid">
+
+      <div class="card stat">
+
+        <div class="label">
+          إجمالي المبيعات
+        </div>
+
+        <div class="value">
+          ${money(total)}
+        </div>
+
+      </div>
+
+      <div class="card stat">
+
+        <div class="label">
+          المبيعات النقدية
+        </div>
+
+        <div class="value">
+          ${money(cashSales+cashTransfers)}
+        </div>
+
+      </div>
+
+      <div class="card stat">
+
+        <div class="label">
+          إجمالي التسديدات
+        </div>
+
+        <div class="value">
+          ${money(payments)}
+        </div>
+
+      </div>
+
+      <div class="card stat">
+
+        <div class="label">
+          صافي الربح بعد المصاريف
+        </div>
+
+        <div class="value">
+          ${money(netProfit)}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <div class="card">
+
+        <h2>ملخص الحسابات</h2>
+
+        <div class="table-wrap">
+
+          <table class="table">
+
+            <tbody>
+
+              <tr>
+                <td>مبيعات البطاقات</td>
+                <td>${money(
+                  s.reduce(
+                    (a,x)=>a+x.price,
+                    0
+                  )
+                )}</td>
+              </tr>
+
+              <tr>
+                <td>التحويلات / الشحن</td>
+                <td>${money(
+                  tr.reduce(
+                    (a,x)=>a+x.price,
+                    0
+                  )
+                )}</td>
+              </tr>
+
+              <tr>
+                <td>التكاليف</td>
+                <td>${money(
+                  s.reduce(
+                    (a,x)=>a+x.cost,
+                    0
+                  )
+                  +
+                  tr.reduce(
+                    (a,x)=>a+x.cost,
+                    0
+                  )
+                )}</td>
+              </tr>
+
+              <tr>
+                <td>المصاريف</td>
+                <td>${money(exp)}</td>
+              </tr>
+
+              <tr>
+                <td><b>صافي الربح</b></td>
+                <td><b>${money(netProfit)}</b></td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+/* =========================================================
+   TYPES
+========================================================= */
+
+function types(){
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="toolbar">
+
+      <button
+        class="btn primary"
+        onclick="openType()">
+        + نوع بطاقة
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <div class="table-wrap">
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>الشركة</th>
+              <th>الاسم</th>
+              <th>القيمة</th>
+              <th>سعر البيع</th>
+              <th>التكلفة</th>
+              <th>حد التنبيه</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${
+              db.cardTypes.map(x=>`
+
+                <tr>
+
+                  <td>${esc(x.company)}</td>
+                  <td>${esc(x.name)}</td>
+                  <td>${money(x.value)}</td>
+                  <td>${money(x.sell)}</td>
+                  <td>${money(x.cost)}</td>
+                  <td>${x.alert}</td>
+
+                  <td>
+
+                    <button
+                      class="btn small"
+                      onclick="editType('${x.id}')">
+                      تعديل
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              `).join('')
+
+              ||
+
+              '<tr><td colspan="7" class="empty">لا توجد بطاقات مضافة.</td></tr>'
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+function backup(){
+
+  document.getElementById('content').innerHTML=`
+
+    <div class="grid">
+
+      <div class="card">
+
+        <h2>نسخ احتياطي</h2>
+
+        <p style="color:var(--muted)">
+          احفظ نسخة من جميع البيانات في ملف JSON.
+        </p>
+
+        <button
+          class="btn primary"
+          onclick="downloadBackup()">
+          تنزيل Backup
+        </button>
+
+      </div>
+
+      <div class="card">
+
+        <h2>استرجاع</h2>
+
+        <p style="color:var(--muted)">
+          اختر ملف Backup سابقًا لاستعادة البيانات.
+        </p>
+
+        <input
+          type="file"
+          accept="application/json"
+          onchange="restoreBackup(this)"
+        >
+
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <div class="card">
+
+        <h2>خيارات تصفير وحذف الحركات</h2>
+
+        <p style="color:var(--muted)">
+          إجراءات حساسة لتنظيف السجلات أو الحركات المباعة.
+        </p>
+
+        <div
+          style="
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-top:15px
+          "
+        >
+
+          <button
+            class="btn warning"
+            onclick="deleteSoldCards()">
+            🗑️ حذف المبيعات والبطاقات المباعة
+          </button>
+
+          <button
+            class="btn danger"
+            onclick="deleteAllTransactions()">
+            ⚠️ حذف جميع الحركات
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function downloadBackup(){
+
+  let a =
+    document.createElement('a');
+
+  a.href =
+    URL.createObjectURL(
+      new Blob(
+        [JSON.stringify(db,null,2)],
+        {type:'application/json'}
+      )
+    );
+
+  a.download =
+    'charge-shop-backup.json';
+
+  a.click();
+
+}
+
+function restoreBackup(inp){
+
+  let f =
+    inp.files[0];
+
+  if(!f)return;
+
+  let r =
+    new FileReader();
+
+  r.onload=async()=>{
+
+    try{
+
+      db =
+        normalizeDb(
+          JSON.parse(r.result)
+        );
+
+      await save();
+
+      alert(
+        'تم الاسترجاع وحفظ البيانات بنجاح.'
+      );
+
+      go('dashboard');
+
+    }catch(e){
+
+      console.error(e);
+
+      alert(
+        'ملف غير صالح أو تعذر حفظ البيانات.'
+      );
+
+    }
+
+  };
+
+  r.readAsText(f);
+
+}
+
+function deleteSoldCards(){
+
+  if(!confirm(
+    'هل أنت متأكد من حذف جميع سجلات المبيعات والبطاقات المباعة والتحويلات?\n\n'+
+    '(سيتم الاحتفاظ بالأشخاص والمخزون الحالي كما هو)'
+  ))return;
+
+  db.sales=[];
+  db.transfers=[];
+
+  save();
+
+  alert(
+    'تم حذف سجلات المبيعات والبطاقات المباعة بنجاح.'
+  );
+
+  go('dashboard');
+
+}
+
+function deleteAllTransactions(){
+
+  if(!confirm(
+    'تنبيه هام جداً!\n'+
+    'هل أنت متأكد من حذف جميع الحركات المالية؟\n\n'+
+    'لا يمكن التراجع عن هذا الإجراء.'
+  ))return;
+
+  db.sales=[];
+  db.transfers=[];
+  db.expenses=[];
+  db.payments=[];
+  db.cashDebts=[];
+  db.cardDebts=[];
+  db.cashMoves=[];
+
+  db.people.forEach(
+    p=>p.debt=0
+  );
+
+  save();
+
+  alert(
+    'تم حذف جميع الحركات المالية وتصفير الحسابات بنجاح.'
+  );
+
+  go('dashboard');
+
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openModal(title,body){
+
+  document
+    .getElementById('modalTitle')
+    .textContent=title;
+
+  document
+    .getElementById('modalBody')
+    .innerHTML=body;
+
+  document
+    .getElementById('modal')
+    .classList.add('open');
+
+}
+
+function closeModal(){
+
+  document
+    .getElementById('modal')
+    .classList.remove('open');
+
+}
+
+/* =========================================================
+   PERSON SEARCH
+========================================================= */
+
+function searchablePersonField(
+  inputId,
+  listId
+){
+
+  return `
+
+    <div class="person-search-wrap">
+
+      <input
+        id="${inputId}"
+        class="input"
+        style="width:100%"
+        placeholder="🔎 اكتب اسم الشخص للبحث..."
+        autocomplete="off"
+        oninput="filterPersonList('${inputId}','${listId}')"
+      >
+
+      <input
+        type="hidden"
+        id="${inputId}_id"
+        value=""
+      >
+
+      <div
+        id="${listId}"
+        class="person-results"
+      ></div>
+
+      <div
+        id="${inputId}_selected"
+        class="selected-person"
+      ></div>
+
+    </div>
+
+  `;
+
+}
+
+function filterPersonList(
+  inputId,
+  listId
+){
+
+  const input =
+    document.getElementById(inputId);
+
+  const list =
+    document.getElementById(listId);
+
+  const hidden =
+    document.getElementById(inputId+'_id');
+
+  const selected =
+    document.getElementById(inputId+'_selected');
+
+  if(!input||!list)return;
+
+  const q =
+    input.value
+      .trim()
+      .toLowerCase();
+
+  if(hidden)
+    hidden.value='';
+
+  if(selected)
+    selected.style.display='none';
+
+  if(!q){
+
+    list.style.display='none';
+    list.innerHTML='';
+
+    return;
+
+  }
+
+  const arr =
+    db.people.filter(
+      p=>
+        String(p.name||'')
+          .toLowerCase()
+          .includes(q)
+    );
+
+  list.innerHTML =
+
+    arr.length
+
+    ?
+
+    arr.map(p=>
+      `<button
+        type="button"
+        class="person-result"
+        onclick="selectPersonSearch('${inputId}','${listId}','${p.id}')"
+      >
+        ${esc(p.name)}
+      </button>`
+    ).join('')
+
+    :
+
+    `<div style="padding:10px;color:var(--muted)">
+      لا يوجد شخص بهذا الاسم
+    </div>`;
+
+  list.style.display='block';
+
+}
+
+function selectPersonSearch(
+  inputId,
+  listId,
+  id
+){
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  let input =
+    document.getElementById(inputId);
+
+  let hidden =
+    document.getElementById(inputId+'_id');
+
+  let list =
+    document.getElementById(listId);
+
+  let selected =
+    document.getElementById(inputId+'_selected');
+
+  input.value=p.name;
+
+  hidden.value=p.id;
+
+  list.style.display='none';
+
+  selected.textContent =
+    '✓ تم اختيار: '+p.name;
+
+  selected.style.display='block';
+
+}
+
+function typeOptions(){
+
+  return db.cardTypes.map(
+    x=>
+      `<option value="${x.id}">
+        ${esc(x.name)} — ${money(x.sell)}
+      </option>`
+  ).join('');
+
+}
+
+/* =========================================================
+   SALE
+========================================================= */
+
+function openSale(){
+
+  openModal(
+    'تسجيل بيع',
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>نوع البيع</label>
+
+          <select
+            id="saleMode"
+            class="select"
+            style="width:100%"
+          >
+
+            <option value="paper">
+              بطاقة ورقية
+            </option>
+
+            <option value="transfer">
+              تحويل / شحن من التطبيق
+            </option>
+
+          </select>
+
+        </div>
+
+        <div
+          class="field"
+          id="paperTypeField"
+        >
+
+          <label>نوع البطاقة</label>
+
+          <select
+            id="fType"
+            class="select"
+            style="width:100%"
+          >
+            ${typeOptions()}
+          </select>
+
+        </div>
+
+        <div
+          class="field hidden"
+          id="transferTypeField"
+        >
+
+          <label>النوع / القيمة</label>
+
+          <input
+            id="fTransferType"
+            class="input"
+            style="width:100%"
+            placeholder="مثال: شحن 5 دنانير"
+          >
+
+        </div>
+
+        <div
+          class="field hidden"
+          id="transferCostField"
+        >
+
+          <label>تكلفة التحويل</label>
+
+          <input
+            id="fTransferCost"
+            class="input"
+            type="number"
+            step="0.01"
+            min="0"
+            style="width:100%"
+            placeholder="مثال: 9"
+          >
+
+          <div
+            style="
+              margin-top:5px;
+              color:var(--muted);
+              font-size:11px
+            "
+          >
+            التكلفة التي دفعتها أنت للتحويل.
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label>الشركة</label>
+
+          <select
+            id="fCompany"
+            class="select"
+            style="width:100%"
+          >
+
+            ${db.companies.map(
+              x=>
+                `<option>${esc(x)}</option>`
+            ).join('')}
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>الشخص</label>
+
+          ${searchablePersonField(
+            'fPersonSearch',
+            'fPersonResults'
+          )}
+
+          <div
+            style="
+              margin-top:5px;
+              color:var(--muted);
+              font-size:11px
+            "
+          >
+            اتركه فارغًا إذا كانت العملية نقدية بدون حساب.
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label>سعر البيع</label>
+
+          <input
+            id="fPrice"
+            class="input"
+            type="number"
+            step="0.01"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>طريقة الدفع</label>
+
+          <select
+            id="fPay"
+            class="select"
+            style="width:100%"
+          >
+
+            <option>نقدًا</option>
+            <option>دين</option>
+
+          </select>
+
+        </div>
+
+        <div class="field full">
+
+          <label>ملاحظات</label>
+
+          <textarea
+            id="fNote"
+            class="textarea"
+            style="width:100%"
+          ></textarea>
+
+        </div>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="createSale()">
+          حفظ العملية
+        </button>
+
+      </div>
+
+    `
+  );
+
+  setTimeout(()=>{
+
+    let mode =
+      document.getElementById('saleMode');
+
+    let paper =
+      document.getElementById('paperTypeField');
+
+    let tr =
+      document.getElementById('transferTypeField');
+
+    let transferCostField =
+      document.getElementById('transferCostField');
+
+    let type =
+      document.getElementById('fType');
+
+    let price =
+      document.getElementById('fPrice');
+
+    let company =
+      document.getElementById('fCompany');
+
+    let sync=()=>{
+
+      let isPaper =
+        mode.value==='paper';
+
+      paper.classList.toggle(
+        'hidden',
+        !isPaper
+      );
+
+      tr.classList.toggle(
+        'hidden',
+        isPaper
+      );
+
+      transferCostField.classList.toggle(
+        'hidden',
+        isPaper
+      );
+
+      if(isPaper){
+
+        let t =
+          db.cardTypes.find(
+            x=>x.id===type.value
+          );
+
+        if(t){
+
+          price.value=t.sell;
+          company.value=t.company;
+
+        }
+
+      }else{
+
+        price.value='';
+
+      }
+
+    };
+
+    mode.onchange=sync;
+
+    if(type){
+
+      type.onchange=()=>{
+
+        let t =
+          db.cardTypes.find(
+            x=>x.id===type.value
+          );
+
+        if(t){
+
+          price.value=t.sell;
+          company.value=t.company;
+
+        }
+
+      };
+
+    }
+
+    const transferTypeInput =
+      document.getElementById('fTransferType');
+
+    const transferCompanySelect =
+      document.getElementById('fCompany');
+
+    const loadSavedTransfer=()=>{
+
+      if(mode.value!=='transfer')
+        return;
+
+      applyTransferTemplate(
+        'fCompany',
+        'fTransferType',
+        'fPrice',
+        'fTransferCost',
+        'fPay',
+        'fNote'
+      );
+
+    };
+
+    if(transferCompanySelect)
+      transferCompanySelect.addEventListener(
+        'change',
+        loadSavedTransfer
+      );
+
+    if(transferTypeInput)
+      transferTypeInput.addEventListener(
+        'input',
+        loadSavedTransfer
+      );
+
+    sync();
+
+  },0);
+
+}
+
+function createSale(){
+
+  let mode =
+    document.getElementById('saleMode').value;
+
+  let pid =
+    document
+      .getElementById('fPersonSearch_id')
+      .value;
+
+  let price =
+    Number(
+      document.getElementById('fPrice').value
+    );
+
+  if(price<=0)
+    return alert('السعر غير صحيح');
+
+  if(
+    document.getElementById('fPay').value==='دين' &&
+    !pid
+  )
+    return alert('اختر الشخص للدين');
+
+  if(mode==='paper'){
+
+    let t =
+      db.cardTypes.find(
+        x=>
+          x.id===
+          document.getElementById('fType').value
+      );
+
+    if(!t || t.stock<=0)
+      return alert(
+        'لا توجد كمية متوفرة من هذا النوع.'
+      );
+
+    let person =
+      pid
+      ? db.people.find(p=>p.id===pid)
+      : null;
+
+    let x={
+
+      id:crypto.randomUUID(),
+
+      typeId:t.id,
+
+      company:t.company,
+
+      cardName:t.name,
+
+      personId:pid,
+
+      person:person
+        ? person.name
+        : '',
+
+      price,
+
+      cost:t.cost,
+
+      payment:
+        document.getElementById('fPay').value,
+
+      note:
+        document.getElementById('fNote').value,
+
+      date:
+        new Date().toISOString(),
+
+      status:'مسجل',
+
+      mode:'ورقي'
+
+    };
+
+    db.sales.push(x);
+
+    t.stock--;
+
+    if(
+      x.payment==='دين' &&
+      person
+    )
+      person.debt+=price;
+
+  }else{
+
+    let transferType =
+      document
+        .getElementById('fTransferType')
+        .value
+        .trim();
+
+    if(!transferType)
+      return alert(
+        'أدخل نوع/قيمة التحويل'
+      );
+
+    let transferCost =
+      Number(
+        document
+          .getElementById('fTransferCost')
+          .value
+      );
+
+    if(
+      isNaN(transferCost) ||
+      transferCost<0
+    )
+      return alert(
+        'أدخل تكلفة التحويل بشكل صحيح'
+      );
+
+    if(transferCost>price)
+      return alert(
+        'تكلفة التحويل لا يمكن أن تكون أكبر من سعر البيع'
+      );
+
+    let person =
+      pid
+      ? db.people.find(p=>p.id===pid)
+      : null;
+
+    let x={
+
+      id:crypto.randomUUID(),
+
+      company:
+        document.getElementById('fCompany').value,
+
+      type:transferType,
+
+      personId:pid,
+
+      person:person
+        ? person.name
+        : '',
+
+      price,
+
+      cost:transferCost,
+
+      payment:
+        document.getElementById('fPay').value,
+
+      note:
+        document.getElementById('fNote').value,
+
+      date:
+        new Date().toISOString(),
+
+      status:'مسجل',
+
+      mode:'تحويل'
+
+    };
+
+    db.transfers.push(x);
+
+    rememberTransferTemplate(
+      x.company,
+      x.type,
+      x.price,
+      x.cost,
+      x.payment,
+      x.note
+    );
+
+    if(
+      x.payment==='دين' &&
+      person
+    )
+      person.debt+=price;
+
+  }
+
+  save();
+
+  closeModal();
+
+  go(
+    mode==='paper'
+    ? 'sales'
+    : 'transfers'
+  );
+
+}
+
+/* =========================================================
+   STANDALONE TRANSFER
+========================================================= */
+
+function openTransfer(){
+
+  openModal(
+    'تسجيل تحويل / شحن من التطبيق',
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>الشركة</label>
+
+          <select
+            id="tfCompany"
+            class="select"
+            style="width:100%"
+          >
+
+            ${db.companies.map(
+              x=>
+                `<option>${esc(x)}</option>`
+            ).join('')}
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>النوع / القيمة</label>
+
+          <input
+            id="tfType"
+            class="input"
+            style="width:100%"
+            placeholder="مثال: شحن 5 دنانير"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>الشخص</label>
+
+          ${searchablePersonField(
+            'tfPersonSearch',
+            'tfPersonResults'
+          )}
+
+        </div>
+
+        <div class="field">
+
+          <label>سعر البيع</label>
+
+          <input
+            id="tfPrice"
+            class="input"
+            type="number"
+            step="0.01"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>تكلفة البطاقة</label>
+
+          <input
+            id="tfCost"
+            class="input"
+            type="number"
+            step="0.01"
+            min="0"
+            style="width:100%"
+            placeholder="مثال: 9.50"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>طريقة الدفع</label>
+
+          <select
+            id="tfPay"
+            class="select"
+            style="width:100%"
+          >
+
+            <option>نقدًا</option>
+            <option>دين</option>
+
+          </select>
+
+        </div>
+
+        <div class="field full">
+
+          <label>ملاحظات</label>
+
+          <textarea
+            id="tfNote"
+            class="textarea"
+            style="width:100%"
+          ></textarea>
+
+        </div>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="createTransfer()">
+          حفظ
+        </button>
+
+      </div>
+
+    `
+  );
+
+  setTimeout(()=>{
+
+    const company =
+      document.getElementById('tfCompany');
+
+    const type =
+      document.getElementById('tfType');
+
+    const loadSavedTransfer=()=>{
+
+      applyTransferTemplate(
+        'tfCompany',
+        'tfType',
+        'tfPrice',
+        'tfCost',
+        'tfPay',
+        'tfNote'
+      );
+
+    };
+
+    if(company)
+      company.addEventListener(
+        'change',
+        loadSavedTransfer
+      );
+
+    if(type)
+      type.addEventListener(
+        'input',
+        loadSavedTransfer
+      );
+
+  },0);
+
+}
+
+function createTransfer(){
+
+  let pid =
+    document
+      .getElementById('tfPersonSearch_id')
+      .value;
+
+  let p =
+    Number(
+      document.getElementById('tfPrice').value
+    );
+
+  let cost =
+    Number(
+      document.getElementById('tfCost').value
+    );
+
+  let type =
+    document
+      .getElementById('tfType')
+      .value
+      .trim();
+
+  if(!type || p<=0)
+    return alert(
+      'أدخل النوع والسعر'
+    );
+
+  if(cost<0)
+    return alert(
+      'تكلفة البطاقة غير صحيحة'
+    );
+
+  if(cost>p)
+    return alert(
+      'تكلفة البطاقة لا يمكن أن تكون أكبر من سعر البيع'
+    );
+
+  if(
+    document.getElementById('tfPay').value==='دين' &&
+    !pid
+  )
+    return alert(
+      'اختر الشخص للدين'
+    );
+
+  let person =
+    pid
+    ? db.people.find(x=>x.id===pid)
+    : null;
+
+  let x={
+
+    id:crypto.randomUUID(),
+
+    company:
+      document.getElementById('tfCompany').value,
+
+    type,
+
+    personId:pid,
+
+    person:person
+      ? person.name
+      : '',
+
+    price:p,
+
+    cost:cost,
+
+    payment:
+      document.getElementById('tfPay').value,
+
+    note:
+      document.getElementById('tfNote').value,
+
+    date:
+      new Date().toISOString(),
+
+    status:'مسجل',
+
+    mode:'تحويل'
+
+  };
+
+  db.transfers.push(x);
+
+  rememberTransferTemplate(
+    x.company,
+    x.type,
+    x.price,
+    x.cost,
+    x.payment,
+    x.note
+  );
+
+  if(
+    x.payment==='دين' &&
+    person
+  )
+    person.debt+=x.price;
+
+  save();
+
+  closeModal();
+
+  go('transfers');
+
+}
+
+/* =========================================================
+   STOCK
+========================================================= */
+
+function openStock(){
+
+  openModal(
+    'إدخال بضاعة',
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>نوع البطاقة</label>
+
+          <select
+            id="stType"
+            class="select"
+            style="width:100%"
+          >
+            ${typeOptions()}
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>الكمية</label>
+
+          <input
+            id="stQty"
+            class="input"
+            type="number"
+            min="1"
+            style="width:100%"
+          >
+
+        </div>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="addStock()">
+          إضافة للمخزون
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function addStock(){
+
+  let t =
+    db.cardTypes.find(
+      x=>
+        x.id===
+        document.getElementById('stType').value
+    );
+
+  let q =
+    Number(
+      document.getElementById('stQty').value
+    );
+
+  if(!t||q<1)
+    return alert(
+      'أدخل كمية صحيحة وتأكد من اختيار البطاقة'
+    );
+
+  t.stock+=q;
+
+  save();
+
+  closeModal();
+
+  inventory();
+
+}
+
+/* =========================================================
+   PERSON
+========================================================= */
+
+function openPerson(){
+
+  openModal(
+    'إضافة شخص',
+    `
+
+      <div class="field">
+
+        <label>الاسم</label>
+
+        <input
+          id="pn"
+          class="input"
+          style="width:100%"
+        >
+
+      </div>
+
+      <div
+        class="field"
+        style="margin-top:12px"
+      >
+
+        <label>ملاحظات</label>
+
+        <textarea
+          id="pnote"
+          class="textarea"
+          style="width:100%"
+        ></textarea>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="createPerson()">
+          حفظ
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function createPerson(){
+
+  let name =
+    document
+      .getElementById('pn')
+      .value
+      .trim();
+
+  if(!name)
+    return alert(
+      'أدخل الاسم'
+    );
+
+  db.people.push({
+
+    id:crypto.randomUUID(),
+
+    name,
+
+    note:
+      document.getElementById('pnote').value,
+
+    debt:0
+
+  });
+
+  save();
+
+  closeModal();
+
+  people();
+
+}
+
+/* =========================================================
+   PAYMENT
+========================================================= */
+
+function openPayment(id){
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  openModal(
+    'تسديد حسـاب — '+p.name,
+    `
+
+      <p>
+        الرصيد الحالي:
+        <b>${money(p.debt)}</b>
+        (${p.debt<0?'له':'عليه'})
+      </p>
+
+      <div class="field">
+
+        <label>المبلغ المدفوع</label>
+
+        <input
+          id="payAmt"
+          class="input"
+          type="number"
+          step="0.01"
+          min="0.01"
+          style="width:100%"
+        >
+
+      </div>
+
+      <div
+        class="field"
+        style="margin-top:12px"
+      >
+
+        <label>ملاحظات</label>
+
+        <textarea
+          id="payNote"
+          class="textarea"
+          style="width:100%"
+        ></textarea>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn success"
+          onclick="createPayment('${id}')">
+          تسجيل
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function createPayment(id){
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  let a =
+    Number(
+      document.getElementById('payAmt').value
+    );
+
+  if(a<=0)
+    return alert(
+      'المبلغ غير صحيح'
+    );
+
+  p.debt-=a;
+
+  if(!db.payments)
+    db.payments=[];
+
+  db.payments.push({
+
+    id:crypto.randomUUID(),
+
+    personId:id,
+
+    person:p.name,
+
+    amount:a,
+
+    note:
+      document.getElementById('payNote').value,
+
+    date:
+      new Date().toISOString()
+
+  });
+
+  save();
+
+  closeModal();
+
+  personDetail(id);
+
+}
+
+/* =========================================================
+   CASH DEBT
+========================================================= */
+
+function openCashDebt(id){
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  openModal(
+    'دين نقدي (عليه) — '+p.name,
+    `
+
+      <div class="field">
+
+        <label>المبلغ</label>
+
+        <input
+          id="cdAmt"
+          class="input"
+          type="number"
+          step="0.01"
+          style="width:100%"
+        >
+
+      </div>
+
+      <div
+        class="field"
+        style="margin-top:12px"
+      >
+
+        <label>ملاحظات</label>
+
+        <textarea
+          id="cdNote"
+          class="textarea"
+          style="width:100%"
+        ></textarea>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="createCashDebt('${id}')">
+          حفظ
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function createCashDebt(id){
+
+  let a =
+    Number(
+      document.getElementById('cdAmt').value
+    );
+
+  if(a<=0)
+    return alert(
+      'أدخل مبلغًا صحيحًا'
+    );
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  p.debt+=a;
+
+  if(!db.cashDebts)
+    db.cashDebts=[];
+
+  db.cashDebts.push({
+
+    id:crypto.randomUUID(),
+
+    personId:id,
+
+    person:p.name,
+
+    amount:a,
+
+    note:
+      document.getElementById('cdNote').value,
+
+    date:
+      new Date().toISOString()
+
+  });
+
+  save();
+
+  closeModal();
+
+  personDetail(id);
+
+}
+
+/* =========================================================
+   CARD DEBT
+========================================================= */
+
+function openCardDebt(id){
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  openModal(
+    'دين بطاقات (له على المحل) — '+p.name,
+    `
+
+      <div class="field">
+
+        <label>القيمة (دائن)</label>
+
+        <input
+          id="crdAmt"
+          class="input"
+          type="number"
+          step="0.01"
+          style="width:100%"
+        >
+
+      </div>
+
+      <div
+        class="field"
+        style="margin-top:12px"
+      >
+
+        <label>
+          تفاصيل البطاقات / ملاحظات
+        </label>
+
+        <textarea
+          id="crdNote"
+          class="textarea"
+          style="width:100%"
+        ></textarea>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="createCardDebt('${id}')">
+          حفظ
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function createCardDebt(id){
+
+  let a =
+    Number(
+      document.getElementById('crdAmt').value
+    );
+
+  if(a<=0)
+    return alert(
+      'أدخل مبلغًا صحيحًا'
+    );
+
+  let p =
+    db.people.find(
+      x=>x.id===id
+    );
+
+  if(!p)return;
+
+  p.debt-=a;
+
+  if(!db.cardDebts)
+    db.cardDebts=[];
+
+  db.cardDebts.push({
+
+    id:crypto.randomUUID(),
+
+    personId:id,
+
+    person:p.name,
+
+    amount:a,
+
+    note:
+      document.getElementById('crdNote').value,
+
+    date:
+      new Date().toISOString()
+
+  });
+
+  save();
+
+  closeModal();
+
+  personDetail(id);
+
+}
+
+/* =========================================================
+   EXPENSE
+========================================================= */
+
+function openExpense(){
+
+  openModal(
+    'تسجيل مصروف',
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>الوصف</label>
+
+          <input
+            id="exDesc"
+            class="input"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>المبلغ</label>
+
+          <input
+            id="exAmt"
+            class="input"
+            type="number"
+            step="0.01"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field full">
+
+          <label>ملاحظات</label>
+
+          <textarea
+            id="exNote"
+            class="textarea"
+            style="width:100%"
+          ></textarea>
+
+        </div>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="createExpense()">
+          حفظ
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function createExpense(){
+
+  let a =
+    Number(
+      document.getElementById('exAmt').value
+    );
+
+  let desc =
+    document
+      .getElementById('exDesc')
+      .value
+      .trim();
+
+  if(!desc||a<=0)
+    return alert(
+      'أدخل وصفًا ومبلغًا صحيحين'
+    );
+
+  db.expenses.push({
+
+    id:crypto.randomUUID(),
+
+    description:desc,
+
+    amount:a,
+
+    note:
+      document.getElementById('exNote').value,
+
+    date:
+      new Date().toISOString()
+
+  });
+
+  save();
+
+  closeModal();
+
+  expenses();
+
+}
+
+/* =========================================================
+   CASH MOVE
+========================================================= */
+
+function openCashMove(){
+
+  openModal(
+    'حركة كاش يدوية',
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>النوع</label>
+
+          <select
+            id="cmType"
+            class="select"
+            style="width:100%"
+          >
+
+            <option value="in">
+              إضافة (إيداع)
+            </option>
+
+            <option value="out">
+              سحب
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>المبلغ</label>
+
+          <input
+            id="cmAmt"
+            class="input"
+            type="number"
+            step="0.01"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field full">
+
+          <label>ملاحظات</label>
+
+          <textarea
+            id="cmNote"
+            class="textarea"
+            style="width:100%"
+          ></textarea>
+
+        </div>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="createCashMove()">
+          حفظ
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function createCashMove(){
+
+  let a =
+    Number(
+      document.getElementById('cmAmt').value
+    );
+
+  if(a<=0)
+    return alert(
+      'أدخل مبلغًا صحيحًا'
+    );
+
+  if(!db.cashMoves)
+    db.cashMoves=[];
+
+  db.cashMoves.push({
+
+    id:crypto.randomUUID(),
+
+    type:
+      document.getElementById('cmType').value,
+
+    amount:a,
+
+    note:
+      document.getElementById('cmNote').value,
+
+    date:
+      new Date().toISOString()
+
+  });
+
+  save();
+
+  closeModal();
+
+  cash();
+
+}
+
+/* =========================================================
+   OPENING CASH
+========================================================= */
+
+function openOpening(){
+
+  openModal(
+    'تعديل الرصيد الافتتاحي',
+    `
+
+      <div class="field">
+
+        <label>الرصيد الافتتاحي</label>
+
+        <input
+          id="opAmt"
+          class="input"
+          type="number"
+          step="0.01"
+          value="${db.openingCash}"
+          style="width:100%"
+        >
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="saveOpening()">
+          حفظ
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function saveOpening(){
+
+  db.openingCash =
+    Number(
+      document.getElementById('opAmt').value
+    ) || 0;
+
+  save();
+
+  closeModal();
+
+  cash();
+
+}
+
+/* =========================================================
+   TYPE
+========================================================= */
+
+function openType(){
+
+  openModal(
+    'إضافة نوع بطاقة',
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>الشركة</label>
+
+          <select
+            id="tpCompany"
+            class="select"
+            style="width:100%"
+          >
+
+            ${db.companies.map(
+              x=>
+                `<option>${esc(x)}</option>`
+            ).join('')}
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>اسم البطاقة</label>
+
+          <input
+            id="tpName"
+            class="input"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>القيمة الاسمية</label>
+
+          <input
+            id="tpVal"
+            class="input"
+            type="number"
+            step="0.01"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>سعر البيع</label>
+
+          <input
+            id="tpSell"
+            class="input"
+            type="number"
+            step="0.01"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>التكلفة</label>
+
+          <input
+            id="tpCost"
+            class="input"
+            type="number"
+            step="0.01"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>حد التنبيه</label>
+
+          <input
+            id="tpAlert"
+            class="input"
+            type="number"
+            value="5"
+            style="width:100%"
+          >
+
+        </div>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="createType()">
+          حفظ
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function createType(){
+
+  let v =
+    Number(
+      document.getElementById('tpVal').value
+    );
+
+  let s =
+    Number(
+      document.getElementById('tpSell').value
+    );
+
+  let c =
+    Number(
+      document.getElementById('tpCost').value
+    );
+
+  if(
+    !document
+      .getElementById('tpName')
+      .value
+      .trim()
+    ||
+    v<=0
+  )
+    return alert(
+      'أدخل بيانات صحيحة'
+    );
+
+  db.cardTypes.push({
+
+    id:crypto.randomUUID(),
+
+    company:
+      document.getElementById('tpCompany').value,
+
+    name:
+      document
+        .getElementById('tpName')
+        .value
+        .trim(),
+
+    value:v,
+
+    sell:s,
+
+    cost:c,
+
+    alert:
+      Number(
+        document.getElementById('tpAlert').value
+      ) || 5,
+
+    stock:0
+
+  });
+
+  save();
+
+  closeModal();
+
+  types();
+
+}
+
+/* =========================================================
+   EDIT TYPE
+========================================================= */
+
+function editType(id){
+
+  let t =
+    db.cardTypes.find(
+      x=>x.id===id
+    );
+
+  if(!t)return;
+
+  openModal(
+    'تعديل نوع البطاقة',
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>الشركة</label>
+
+          <select
+            id="etCompany"
+            class="select"
+            style="width:100%"
+          >
+
+            ${db.companies.map(
+              x=>
+                `<option ${
+                  x===t.company
+                  ? 'selected'
+                  : ''
+                }>
+                  ${esc(x)}
+                </option>`
+            ).join('')}
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>اسم البطاقة</label>
+
+          <input
+            id="etName"
+            class="input"
+            value="${esc(t.name)}"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>القيمة الاسمية</label>
+
+          <input
+            id="etVal"
+            class="input"
+            type="number"
+            step="0.01"
+            value="${t.value}"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>سعر البيع</label>
+
+          <input
+            id="etSell"
+            class="input"
+            type="number"
+            step="0.01"
+            value="${t.sell}"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>التكلفة</label>
+
+          <input
+            id="etCost"
+            class="input"
+            type="number"
+            step="0.01"
+            value="${t.cost}"
+            style="width:100%"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>حد التنبيه</label>
+
+          <input
+            id="etAlert"
+            class="input"
+            type="number"
+            value="${t.alert}"
+            style="width:100%"
+          >
+
+        </div>
+
+      </div>
+
+      <div
+        style="margin-top:15px;text-align:left"
+      >
+
+        <button
+          class="btn primary"
+          onclick="saveType('${t.id}')">
+          تحديث
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+function saveType(id){
+
+  let t =
+    db.cardTypes.find(
+      x=>x.id===id
+    );
+
+  if(!t)return;
+
+  t.company =
+    document.getElementById('etCompany').value;
+
+  t.name =
+    document
+      .getElementById('etName')
+      .value
+      .trim();
+
+  t.value =
+    Number(
+      document.getElementById('etVal').value
+    );
+
+  t.sell =
+    Number(
+      document.getElementById('etSell').value
+    );
+
+  t.cost =
+    Number(
+      document.getElementById('etCost').value
+    );
+
+  t.alert =
+    Number(
+      document.getElementById('etAlert').value
+    );
+
+  save();
+
+  closeModal();
+
+  types();
+
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+
+checkSession();
+
+</script>
+
+</body>
+</html>
